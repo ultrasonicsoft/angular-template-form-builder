@@ -15,6 +15,16 @@ export class NgFormBuilder {
 <input type="$TYPE$" name="$NAME$" [(ngModel)]="$NAME$" class="form-control" value="$PLACEHOLDER$">
 </div>`;
 
+    variableTemplate = `
+    $VARIABLE$ : $TYPE$;`;
+
+    submitMethod = `
+    
+    onSubmit(formValues: JSON) {        
+        
+      }`;
+    tsCode = '';
+
     newForm = '';
 
     public getTemplateForm(jsonData: string) {
@@ -30,16 +40,28 @@ export class NgFormBuilder {
                     value = Date.parse(value);
                     value = new Date(value);
                 }
+                if(property =='password'){
+                    type = 'password';
+                }
+                
                 let template = this.controlTemplate.replace("$TYPE$", type);
                 template = template.replace("$NAME$", property);
                 template = template.replace("$NAME$", property);
                 template = template.replace("$PLACEHOLDER$", value);
 
+                let variable = this.variableTemplate.replace("$VARIABLE$", property);
+                variable = variable.replace("$TYPE$", typeof value);
+                this.tsCode += variable;
                 this.newForm += template;
             }
         }
 
         this.newForm += this.endFormTemplate;
         return this.newForm;
+    }
+
+    getTsCode() {
+        this.tsCode += this.submitMethod;
+        return this.tsCode;
     }
 }

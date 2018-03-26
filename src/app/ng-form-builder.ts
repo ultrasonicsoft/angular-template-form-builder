@@ -1,13 +1,18 @@
 import { TypeHelper } from "./type-helper";
 
 export class NgFormBuilder {
-    beginFormTemplate = `<form #form="ngForm" (ngSubmit)="onSubmit(form.value)">`;
+    beginFormTemplate = `
+    <div class="container">
+    <form #form="ngForm" (ngSubmit)="onSubmit(form.value)">`;
 
-    endFormTemplate = `<button type="submit">Submit</button>
-  </form>`;
+    endFormTemplate = `
+    <button class="btn btn-primary" type="submit">Submit</button>
+  </form>
+  </div>`;
 
-    controlTemplate = `<div>
-<input type="$TYPE$" name="$NAME$" [(ngModel)]="$NAME$">
+    controlTemplate = `
+    <div class="form-group">
+<input type="$TYPE$" name="$NAME$" [(ngModel)]="$NAME$" class="form-control" value="$PLACEHOLDER$">
 </div>`;
 
     newForm = '';
@@ -21,10 +26,15 @@ export class NgFormBuilder {
             if (jsonObject.hasOwnProperty(property)) {
                 let value = jsonObject[property.toString()];
                 let type = TypeHelper.getType(value);
-                
+                if (type == 'date') {
+                    value = Date.parse(value);
+                    value = new Date(value);
+                }
                 let template = this.controlTemplate.replace("$TYPE$", type);
                 template = template.replace("$NAME$", property);
                 template = template.replace("$NAME$", property);
+                template = template.replace("$PLACEHOLDER$", value);
+
                 this.newForm += template;
             }
         }

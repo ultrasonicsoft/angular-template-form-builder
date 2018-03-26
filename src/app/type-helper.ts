@@ -1,13 +1,11 @@
 export class TypeHelper {
     public static getType(value) {
-        let type = '';
 
-        if (this.isString(value)) type = 'text';
-        if (this.isNumber(value)) type = 'number';
-        if (this.isBoolean(value)) type = 'checkbox';
-        if (this.isDate(value)) type = 'date';
-
-        return type;
+            if (this.isNumber(value)) return 'number';
+        if (this.isBoolean(value)) return 'checkbox';
+        if (this.isDate(value)) return 'date';
+        if (this.isString(value)) return 'text';
+        
     }
     public static isString(value) {
         return typeof value === 'string' || value instanceof String;
@@ -22,7 +20,8 @@ export class TypeHelper {
     };
 
     public static isDate(value) {
-        return value instanceof Date;
+        let result = value instanceof Date || Date.parse(value);
+        return result;
     };
 
     public static isArray(value) {
